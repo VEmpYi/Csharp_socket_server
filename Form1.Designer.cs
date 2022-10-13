@@ -73,9 +73,9 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(328, 4);
+            this.btnStart.Location = new System.Drawing.Point(329, 10);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(104, 32);
+            this.btnStart.Size = new System.Drawing.Size(84, 25);
             this.btnStart.TabIndex = 3;
             this.btnStart.Text = "开始监听";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -84,68 +84,68 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(528, 12);
+            this.comboBox1.Location = new System.Drawing.Point(426, 10);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 23);
             this.comboBox1.TabIndex = 4;
             // 
             // txtLog
             // 
-            this.txtLog.Location = new System.Drawing.Point(39, 83);
+            this.txtLog.Location = new System.Drawing.Point(24, 66);
             this.txtLog.Multiline = true;
             this.txtLog.Name = "txtLog";
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtLog.Size = new System.Drawing.Size(699, 111);
+            this.txtLog.Size = new System.Drawing.Size(372, 318);
             this.txtLog.TabIndex = 5;
             // 
             // txtMsg
             // 
-            this.txtMsg.Location = new System.Drawing.Point(39, 238);
+            this.txtMsg.Location = new System.Drawing.Point(413, 66);
             this.txtMsg.Multiline = true;
             this.txtMsg.Name = "txtMsg";
             this.txtMsg.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtMsg.Size = new System.Drawing.Size(699, 129);
+            this.txtMsg.Size = new System.Drawing.Size(355, 318);
             this.txtMsg.TabIndex = 6;
             // 
             // textBox5
             // 
-            this.textBox5.Location = new System.Drawing.Point(39, 379);
+            this.textBox5.Location = new System.Drawing.Point(24, 390);
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(508, 25);
+            this.textBox5.Size = new System.Drawing.Size(523, 25);
             this.textBox5.TabIndex = 7;
             // 
             // btnSelect
             // 
-            this.btnSelect.Location = new System.Drawing.Point(553, 374);
+            this.btnSelect.Location = new System.Drawing.Point(553, 390);
             this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(75, 31);
+            this.btnSelect.Size = new System.Drawing.Size(75, 26);
             this.btnSelect.TabIndex = 8;
             this.btnSelect.Text = "选择";
             this.btnSelect.UseVisualStyleBackColor = true;
             // 
             // btnSendFile
             // 
-            this.btnSendFile.Location = new System.Drawing.Point(634, 374);
+            this.btnSendFile.Location = new System.Drawing.Point(634, 390);
             this.btnSendFile.Name = "btnSendFile";
-            this.btnSendFile.Size = new System.Drawing.Size(104, 31);
+            this.btnSendFile.Size = new System.Drawing.Size(104, 26);
             this.btnSendFile.TabIndex = 9;
             this.btnSendFile.Text = "发送文件";
             this.btnSendFile.UseVisualStyleBackColor = true;
             // 
             // btnSendMesg
             // 
-            this.btnSendMesg.Location = new System.Drawing.Point(559, 203);
+            this.btnSendMesg.Location = new System.Drawing.Point(605, 39);
             this.btnSendMesg.Name = "btnSendMesg";
-            this.btnSendMesg.Size = new System.Drawing.Size(98, 29);
+            this.btnSendMesg.Size = new System.Drawing.Size(82, 26);
             this.btnSendMesg.TabIndex = 10;
             this.btnSendMesg.Text = "发送消息";
             this.btnSendMesg.UseVisualStyleBackColor = true;
             // 
             // btnShake
             // 
-            this.btnShake.Location = new System.Drawing.Point(663, 203);
+            this.btnShake.Location = new System.Drawing.Point(693, 37);
             this.btnShake.Name = "btnShake";
-            this.btnShake.Size = new System.Drawing.Size(75, 29);
+            this.btnShake.Size = new System.Drawing.Size(75, 27);
             this.btnShake.TabIndex = 11;
             this.btnShake.Text = "震动";
             this.btnShake.UseVisualStyleBackColor = true;
@@ -153,10 +153,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(12, 55);
+            this.label1.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(48, 43);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 20);
+            this.label1.Size = new System.Drawing.Size(44, 18);
             this.label1.TabIndex = 12;
             this.label1.Text = "日志";
             // 
@@ -173,12 +173,12 @@
             // msgSend
             // 
             this.msgSend.AutoSize = true;
-            this.msgSend.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.msgSend.Location = new System.Drawing.Point(12, 212);
+            this.msgSend.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.msgSend.Location = new System.Drawing.Point(437, 43);
             this.msgSend.Name = "msgSend";
-            this.msgSend.Size = new System.Drawing.Size(109, 20);
+            this.msgSend.Size = new System.Drawing.Size(80, 18);
             this.msgSend.TabIndex = 14;
-            this.msgSend.Text = "消息发送框";
+            this.msgSend.Text = "消息发送";
             // 
             // Form1
             // 

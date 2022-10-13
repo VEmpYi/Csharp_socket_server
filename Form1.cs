@@ -28,25 +28,35 @@ namespace socket1
         bool startListened = false;
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (startListened)
+            try
             {
-                ShowMsg("The server has started listening!", 1);
+                if (startListened)
+                {
+                    ShowMsg("The server has started listening!", 1);
+                }
+                else
+                {
+                    // change the start state
+                    startListened = true;
+                    IPAddress ip = IPAddress.Any;  // before: IPAddress.Parse(txtServer.Text);  do: string -> IPAddress
+                     // Create port object
+                    IPEndPoint ep = new IPEndPoint(ip, Convert.ToInt32(txtPort.Text));
+                    //listener port(bind listening port)
+                    socketWatch.Bind(ep);
+                    // setting up the listening queue
+                    socketWatch.Listen(10);
+                    ShowMsg("Listening to success!");
+                    // create a new thread to accept connections
+                    Thread listen = new Thread(Listen);
+                    listen.IsBackground = true;
+                    listen.Start(socketWatch);
+                }
             }
-            else
+            catch
             {
-                IPAddress ip = IPAddress.Any;  // before: IPAddress.Parse(txtServer.Text);  do: string -> IPAddress
-                // Create port object
-                IPEndPoint ep = new IPEndPoint(ip, Convert.ToInt32(txtPort.Text));
-                //listener port(bind listening port)
-                socketWatch.Bind(ep);
-                // setting up the listening queue
-                socketWatch.Listen(10);
-                ShowMsg("Listening to success!");
-                // create a new thread to accept connections
-                Thread th = new Thread(Listen);
-                th.IsBackground = true;
-                th.Start(socketWatch);
+                ShowMsg("Build connection error!", 1);
             }
+            
             
         }
 
@@ -57,36 +67,84 @@ namespace socket1
         void Listen(object o)
         {
             Socket socketWatch = o as Socket;
-            while (true)
+            try
             {
-                // wait for the client to connect and create a socket responsible for communication
-                Socket socketSend = socketWatch.Accept();
-                // Log send
-                ShowMsg(socketSend.RemoteEndPoint.ToString() + ":" + " Connected!");
+                while (true)
+                {
+                    // wait for the client to connect and create a socket responsible for communication
+                    Socket socketSend = socketWatch.Accept();
+                    // Log send
+                    ShowMsg(socketSend.RemoteEndPoint.ToString() + ":" + " Connected!");
+                    // When client is successfully connected, server should receive the message from the client
+                    Thread receive = new Thread(Receive);
+                    receive.IsBackground = true;
+                    receive.Start(socketSend);
+                }
             }
+            catch
+            {
+                ShowMsg("Connection error! Location: Listen", 1);
+            }
+            
         }
 
+        /// <summary>
+        /// receive the message from the client
+        /// </summary>
+        /// <param name="obj">Socket Send Object</param>
+        void Receive(object obj)
+        {
+            Socket socketSend = obj as Socket;
+            try
+            {
+                while (true)
+                {
+                    byte[] buffer = new byte[1024 * 1024 * 2];
+                    int r = socketSend.Receive(buffer);
+                    if (r == 0)
+                    {
+                        ShowMsg(socketSend.RemoteEndPoint.ToString() + ": " + "Close!");
+                        socketSend.Dispose();
+                        socketSend.Close();
+                        break;
+                    }
+                    string str = Encoding.UTF8.GetString(buffer, 0, r);
+                    ShowMsg(socketSend.RemoteEndPoint + ": " + str, 2);
+
+                }
+            }
+            catch
+            {
+                ShowMsg("Connection error! Location: Receive", 1);
+            }
+            
+        }
+
+        /// <summary>
+        /// Send message to the log box
+        /// </summary>
+        /// <param name="str">Log message</param>
+        /// <param name="level">log level default is INFO, ERROR is 1, MESG is 2</param>
         void ShowMsg(string str,int level = 0)
         {
-            System.DateTime time = DateTime.Now;
-            string hour = time.Hour.ToString();
-            string minute = time.Minute.ToString();
-            string second = time.Second.ToString();
-            string s = hour + ":" + minute + ":" + second + " ";
+            string time = DateTime.Now.ToString().Substring(11);
             string state = "[] ";
             switch (level)
             {
                 case 0: 
-                    state = "[INFO] ";
+                    state = "[INFO]";
                     break;
                 case 1:
-                    state = "[ERROR] ";
-                    break ;
-                default:
-                    state = "[NULL] ";
+                    state = "[ERROR]";
                     break;
-            }  
-            txtLog.AppendText(state+s+ str + "\r\n");
+                case 2:
+                    state = "[MESG]";
+                    break;
+                default:
+                    state = "[NULL]";
+                    break;
+            }
+            txtLog.AppendText(state + "[" + time + "]" + str + "\r\n");
         }
 
         private void txtPort_TextChanged(object sender, EventArgs e)
