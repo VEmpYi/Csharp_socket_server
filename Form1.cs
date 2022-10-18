@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -11,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace socket1
 {
@@ -120,9 +122,23 @@ namespace socket1
                         socketSend.Close();
                         break;
                     }
-                    string str = Encoding.UTF8.GetString(buffer, 0, r);
-                    ShowMsg(socketSend.RemoteEndPoint + ": " + str, 2);
-                    
+                    if (buffer[0] == (byte)msgType.text)
+                    {
+                        string str = Encoding.UTF8.GetString(buffer, 1, r - 1);
+                        ShowMsg(socketSend.RemoteEndPoint + ": " + str, 2);
+                    }
+                    else if (buffer[0] == (byte)msgType.file)
+                    {
+
+                    }
+                    else if (buffer[0] == (byte)msgType.shake)
+                    {
+
+                    }
+                    else
+                    {
+                        ShowMsg("Message type error!", 1);
+                    }
                 }
             }
             catch(Exception e)
@@ -235,11 +251,31 @@ namespace socket1
             }
         }
 
+        /// <summary>
+        /// define the message types
+        /// </summary>
         enum msgType
         {
             text,
             file,
             shake
+        }
+
+        /// <summary>
+        /// Select the file to send
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSelect_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            string path = @"C:\Users\{0}\Desktop\", Environment.UserName;
+            ofd.InitialDirectory = path;
+            ofd.Title = "Open";
+            ofd.Filter = "All files|*.*";
+            ofd.ShowDialog();
+
+            txtPath.Text = ofd.FileName;
         }
     }
 }

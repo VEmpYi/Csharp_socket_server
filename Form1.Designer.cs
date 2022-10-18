@@ -36,7 +36,7 @@
             this.cbBoxIP = new System.Windows.Forms.ComboBox();
             this.txtLog = new System.Windows.Forms.TextBox();
             this.txtMsg = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.txtPath = new System.Windows.Forms.TextBox();
             this.btnSelect = new System.Windows.Forms.Button();
             this.btnSendFile = new System.Windows.Forms.Button();
             this.btnSendMesg = new System.Windows.Forms.Button();
@@ -109,12 +109,12 @@
             this.txtMsg.Size = new System.Drawing.Size(355, 318);
             this.txtMsg.TabIndex = 6;
             // 
-            // textBox5
+            // txtPath
             // 
-            this.textBox5.Location = new System.Drawing.Point(24, 390);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(553, 25);
-            this.textBox5.TabIndex = 7;
+            this.txtPath.Location = new System.Drawing.Point(24, 390);
+            this.txtPath.Name = "txtPath";
+            this.txtPath.Size = new System.Drawing.Size(553, 25);
+            this.txtPath.TabIndex = 7;
             // 
             // btnSelect
             // 
@@ -124,6 +124,7 @@
             this.btnSelect.TabIndex = 8;
             this.btnSelect.Text = "选择";
             this.btnSelect.UseVisualStyleBackColor = true;
+            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
             // btnSendFile
             // 
@@ -198,7 +199,7 @@
             this.Controls.Add(this.btnSendMesg);
             this.Controls.Add(this.btnSendFile);
             this.Controls.Add(this.btnSelect);
-            this.Controls.Add(this.textBox5);
+            this.Controls.Add(this.txtPath);
             this.Controls.Add(this.txtMsg);
             this.Controls.Add(this.txtLog);
             this.Controls.Add(this.cbBoxIP);
@@ -222,7 +223,7 @@
         private System.Windows.Forms.ComboBox cbBoxIP;
         private System.Windows.Forms.TextBox txtLog;
         private System.Windows.Forms.TextBox txtMsg;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.Button btnSelect;
         private System.Windows.Forms.Button btnSendFile;
         private System.Windows.Forms.Button btnSendMesg;
