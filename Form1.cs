@@ -22,8 +22,12 @@ namespace socket1
             Control.CheckForIllegalCrossThreadCalls = false;
         }
 
-        // create socket for watch
+        // Create socket for watch
         Socket socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        // Save the IP address, port and socket of remote client to the dict
+        Dictionary<string, Socket> dictSocket = new Dictionary<string, Socket>();
+        Dictionary<string, string> dictScoketNames = new Dictionary<string, string>();
 
         bool startListened = false;
         private void btnStart_Click(object sender, EventArgs e)
@@ -60,6 +64,7 @@ namespace socket1
             
         }
 
+        Socket socketSend;
        /// <summary>
        /// a socket to responsible for communication
        /// </summary>
@@ -68,17 +73,22 @@ namespace socket1
         {
             Socket socketWatch = o as Socket;
             try
-            {
+            { 
                 while (true)
                 {
-                    // wait for the client to connect and create a socket responsible for communication
-                    Socket socketSend = socketWatch.Accept();
+                    // Wait for the client to connect and create a socket responsible for communication
+                    socketSend = socketWatch.Accept();
+                    // Save the socket
+                    string ip = socketSend.RemoteEndPoint.ToString();
+                    dictSocket.Add(ip, socketSend);
+                    cbBoxIP.Items.Add(ip);
                     // Log send
                     ShowMsg(socketSend.RemoteEndPoint.ToString() + ":" + " Connected!");
                     // When client is successfully connected, server should receive the message from the client
                     Thread receive = new Thread(Receive);
                     receive.IsBackground = true;
-                    receive.Start(socketSend);
+                    dictScoketNames.Add(ip, receive.Name);
+                    receive.Start(dictSocket[ip]);
                 }
             }
             catch
@@ -104,31 +114,41 @@ namespace socket1
                     if (r == 0)
                     {
                         ShowMsg(socketSend.RemoteEndPoint.ToString() + ": " + "Close!");
-                        socketSend.Dispose();
+                        dictSocket.Remove(socketSend.RemoteEndPoint.ToString());
+                        cbBoxIP.Items.Remove(socketSend.RemoteEndPoint.ToString());
+                        // socketSend.Dispose();
                         socketSend.Close();
                         break;
                     }
                     string str = Encoding.UTF8.GetString(buffer, 0, r);
                     ShowMsg(socketSend.RemoteEndPoint + ": " + str, 2);
-
+                    
                 }
             }
-            catch
+            catch(Exception e)
             {
-                ShowMsg("Connection error! Location: Receive", 1);
+                if(!(e is System.Net.Sockets.SocketException))
+                {
+                    ShowMsg("Connection error! Location: Receive", 1);
+                }
+                else
+                {
+                    
+                }
+                
             }
             
         }
 
         /// <summary>
-        /// Send message to the log box
+        /// Send message to the log textbox
         /// </summary>
         /// <param name="str">Log message</param>
         /// <param name="level">log level default is INFO, ERROR is 1, MESG is 2</param>
         void ShowMsg(string str,int level = 0)
         {
             string time = DateTime.Now.ToString().Substring(11);
-            string state = "[] ";
+            string state;
             switch (level)
             {
                 case 0: 
@@ -165,6 +185,61 @@ namespace socket1
                 MessageBox.Show("Input Error! The value should range from 0 ~ 65535");
                 txtPort.Text = "0";
             }
+        }
+
+        /// <summary>
+        /// Send message to client
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSendMesg_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string str = txtMsg.Text;
+                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(str);
+                bool answer = MessageHeaders(msgType.text, ref buffer);
+                // Get the IP address selected from the comboBox list
+                string ip = cbBoxIP.SelectedItem.ToString();
+                // Send message to the specified IP
+                dictSocket[ip].Send(buffer);
+                ShowMsg("Send to " + dictSocket[ip].RemoteEndPoint + ": " + str, 2);
+                txtMsg.Clear();
+            }
+            catch
+            {
+                ShowMsg("Message send failure!", 1);
+            }
+
+        }
+
+        /// <summary>
+        /// Adds a message type header to the message to be sent
+        /// </summary>
+        /// <param name="type">message type</param>
+        /// <param name="buffer">the message to be sent</param>
+        /// <returns>whether the action was successful</returns>
+        private bool MessageHeaders(msgType type, ref byte[] buffer)
+        {
+            try
+            {
+                List<byte> list = new List<byte>();
+                list.Add((byte)type);
+                list.AddRange(buffer);
+                buffer = list.ToArray();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        enum msgType
+        {
+            text,
+            file,
+            shake
         }
     }
 }

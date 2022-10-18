@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "socket1", "socket1.csproj", "{372141FB-60DE-4FF4-98B5-B98CA3605EC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "socket1_server", "socket1_server.csproj", "{372141FB-60DE-4FF4-98B5-B98CA3605EC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

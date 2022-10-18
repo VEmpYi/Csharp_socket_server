@@ -33,7 +33,7 @@
             this.txtPort = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.btnStart = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.cbBoxIP = new System.Windows.Forms.ComboBox();
             this.txtLog = new System.Windows.Forms.TextBox();
             this.txtMsg = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
@@ -44,11 +44,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.iPPort = new System.Windows.Forms.Label();
             this.msgSend = new System.Windows.Forms.Label();
+            this.form1BindingSource = new System.Windows.Forms.BindingSource(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.form1BindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // txtServer
             // 
-            this.txtServer.Location = new System.Drawing.Point(99, 10);
+            this.txtServer.Location = new System.Drawing.Point(130, 15);
             this.txtServer.MaxLength = 15;
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(158, 25);
@@ -57,7 +59,7 @@
             // 
             // txtPort
             // 
-            this.txtPort.Location = new System.Drawing.Point(263, 10);
+            this.txtPort.Location = new System.Drawing.Point(294, 15);
             this.txtPort.MaxLength = 15;
             this.txtPort.Name = "txtPort";
             this.txtPort.Size = new System.Drawing.Size(48, 25);
@@ -73,7 +75,7 @@
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(329, 10);
+            this.btnStart.Location = new System.Drawing.Point(360, 15);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(84, 25);
             this.btnStart.TabIndex = 3;
@@ -81,13 +83,13 @@
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
-            // comboBox1
+            // cbBoxIP
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(426, 10);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 23);
-            this.comboBox1.TabIndex = 4;
+            this.cbBoxIP.FormattingEnabled = true;
+            this.cbBoxIP.Location = new System.Drawing.Point(457, 15);
+            this.cbBoxIP.Name = "cbBoxIP";
+            this.cbBoxIP.Size = new System.Drawing.Size(121, 23);
+            this.cbBoxIP.TabIndex = 4;
             // 
             // txtLog
             // 
@@ -111,12 +113,12 @@
             // 
             this.textBox5.Location = new System.Drawing.Point(24, 390);
             this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(523, 25);
+            this.textBox5.Size = new System.Drawing.Size(553, 25);
             this.textBox5.TabIndex = 7;
             // 
             // btnSelect
             // 
-            this.btnSelect.Location = new System.Drawing.Point(553, 390);
+            this.btnSelect.Location = new System.Drawing.Point(583, 389);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(75, 26);
             this.btnSelect.TabIndex = 8;
@@ -125,7 +127,7 @@
             // 
             // btnSendFile
             // 
-            this.btnSendFile.Location = new System.Drawing.Point(634, 390);
+            this.btnSendFile.Location = new System.Drawing.Point(664, 390);
             this.btnSendFile.Name = "btnSendFile";
             this.btnSendFile.Size = new System.Drawing.Size(104, 26);
             this.btnSendFile.TabIndex = 9;
@@ -140,6 +142,7 @@
             this.btnSendMesg.TabIndex = 10;
             this.btnSendMesg.Text = "发送消息";
             this.btnSendMesg.UseVisualStyleBackColor = true;
+            this.btnSendMesg.Click += new System.EventHandler(this.btnSendMesg_Click);
             // 
             // btnShake
             // 
@@ -153,38 +156,41 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(48, 43);
+            this.label1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(36, 50);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 18);
+            this.label1.Size = new System.Drawing.Size(37, 15);
             this.label1.TabIndex = 12;
             this.label1.Text = "日志";
             // 
             // iPPort
             // 
             this.iPPort.AutoSize = true;
-            this.iPPort.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.iPPort.Location = new System.Drawing.Point(12, 14);
+            this.iPPort.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.iPPort.Location = new System.Drawing.Point(21, 18);
             this.iPPort.Name = "iPPort";
-            this.iPPort.Size = new System.Drawing.Size(71, 18);
+            this.iPPort.Size = new System.Drawing.Size(103, 15);
             this.iPPort.TabIndex = 13;
-            this.iPPort.Text = "IP:Port";
+            this.iPPort.Text = "Self IP:Port";
             // 
             // msgSend
             // 
             this.msgSend.AutoSize = true;
-            this.msgSend.Font = new System.Drawing.Font("宋体", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.msgSend.Location = new System.Drawing.Point(437, 43);
+            this.msgSend.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.msgSend.Location = new System.Drawing.Point(428, 50);
             this.msgSend.Name = "msgSend";
-            this.msgSend.Size = new System.Drawing.Size(80, 18);
+            this.msgSend.Size = new System.Drawing.Size(67, 15);
             this.msgSend.TabIndex = 14;
             this.msgSend.Text = "消息发送";
             // 
+            // form1BindingSource
+            // 
+            this.form1BindingSource.DataSource = typeof(socket1.Form1);
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.ClientSize = new System.Drawing.Size(790, 433);
             this.Controls.Add(this.msgSend);
             this.Controls.Add(this.iPPort);
             this.Controls.Add(this.label1);
@@ -195,12 +201,13 @@
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.txtMsg);
             this.Controls.Add(this.txtLog);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.cbBoxIP);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.txtPort);
             this.Controls.Add(this.txtServer);
             this.Name = "Form1";
             this.Text = "TCP Server";
+            ((System.ComponentModel.ISupportInitialize)(this.form1BindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -212,7 +219,7 @@
         private System.Windows.Forms.TextBox txtPort;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cbBoxIP;
         private System.Windows.Forms.TextBox txtLog;
         private System.Windows.Forms.TextBox txtMsg;
         private System.Windows.Forms.TextBox textBox5;
@@ -223,6 +230,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label iPPort;
         private System.Windows.Forms.Label msgSend;
+        private System.Windows.Forms.BindingSource form1BindingSource;
     }
 }
 
