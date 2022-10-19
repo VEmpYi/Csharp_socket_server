@@ -134,6 +134,7 @@
             this.btnSendFile.TabIndex = 9;
             this.btnSendFile.Text = "发送文件";
             this.btnSendFile.UseVisualStyleBackColor = true;
+            this.btnSendFile.Click += new System.EventHandler(this.btnSendFile_Click);
             // 
             // btnSendMesg
             // 
@@ -153,6 +154,7 @@
             this.btnShake.TabIndex = 11;
             this.btnShake.Text = "震动";
             this.btnShake.UseVisualStyleBackColor = true;
+            this.btnShake.Click += new System.EventHandler(this.btnShake_Click);
             // 
             // label1
             // 

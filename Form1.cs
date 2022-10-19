@@ -131,10 +131,6 @@ namespace socket1
                     {
 
                     }
-                    else if (buffer[0] == (byte)msgType.shake)
-                    {
-
-                    }
                     else
                     {
                         ShowMsg("Message type error!", 1);
@@ -213,8 +209,9 @@ namespace socket1
             try
             {
                 string str = txtMsg.Text;
-                byte[] buffer = System.Text.Encoding.UTF8.GetBytes(str);
-                bool answer = MessageHeaders(msgType.text, ref buffer);
+                byte[] initBuffer = System.Text.Encoding.UTF8.GetBytes(str);
+                byte[] buffer = MessageHeaders(msgType.text, initBuffer);
+                ShowMsg("buffer length is "+buffer.Length);
                 // Get the IP address selected from the comboBox list
                 string ip = cbBoxIP.SelectedItem.ToString();
                 // Send message to the specified IP
@@ -235,19 +232,20 @@ namespace socket1
         /// <param name="type">message type</param>
         /// <param name="buffer">the message to be sent</param>
         /// <returns>whether the action was successful</returns>
-        private bool MessageHeaders(msgType type, ref byte[] buffer)
+        private byte[] MessageHeaders(msgType type, byte[] buffer)
         {
             try
             {
                 List<byte> list = new List<byte>();
                 list.Add((byte)type);
                 list.AddRange(buffer);
-                buffer = list.ToArray();
-                return true;
+                byte[] newBuffer = list.ToArray();
+                return newBuffer;
             }
             catch
             {
-                return false;
+                byte[] fail = null;
+                return fail;
             }
         }
 
@@ -269,13 +267,40 @@ namespace socket1
         private void btnSelect_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            string path = @"C:\Users\{0}\Desktop\", Environment.UserName;
+            string path = @"C:\Users\" + Environment.UserName + @"\Desktop";
             ofd.InitialDirectory = path;
             ofd.Title = "Open";
             ofd.Filter = "All files|*.*";
             ofd.ShowDialog();
 
             txtPath.Text = ofd.FileName;
+        }
+
+        private void btnSendFile_Click(object sender, EventArgs e)
+        {
+            string  path = txtPath.Text;
+            using(FileStream fsRead = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                byte[] initBuffer = new byte[1024 * 1024 * 2];
+                int r = fsRead.Read(initBuffer, 0, initBuffer.Length);
+                byte[] buffer = MessageHeaders(msgType.file, initBuffer);
+                if (buffer != null)
+                {
+                    ShowMsg("Preparing to send file!");
+                }
+                else
+                {
+                    ShowMsg("File create failure!", 1);
+                }
+                dictSocket[cbBoxIP.SelectedItem.ToString()].Send(buffer, 0, r + 1, SocketFlags.None);
+            }
+        }
+
+        private void btnShake_Click(object sender, EventArgs e)
+        {
+            byte[] buffer = new byte[1];
+            buffer[0] = 2;
+            dictSocket[cbBoxIP.SelectedItem.ToString()].Send(buffer);
         }
     }
 }
