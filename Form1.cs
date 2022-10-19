@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace socket1
 {
@@ -25,13 +18,15 @@ namespace socket1
         }
 
         // Create socket for watch
-        Socket socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        private Socket socketWatch = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         // Save the IP address, port and socket of remote client to the dict
-        Dictionary<string, Socket> dictSocket = new Dictionary<string, Socket>();
-        Dictionary<string, string> dictScoketNames = new Dictionary<string, string>();
+        private Dictionary<string, Socket> dictSocket = new Dictionary<string, Socket>();
 
-        bool startListened = false;
+        private Dictionary<string, string> dictScoketNames = new Dictionary<string, string>();
+
+        private bool startListened = false;
+
         private void btnStart_Click(object sender, EventArgs e)
         {
             try
@@ -44,14 +39,16 @@ namespace socket1
                 {
                     // change the start state
                     startListened = true;
-                    IPAddress ip = IPAddress.Any;  // before: IPAddress.Parse(txtServer.Text);  do: string -> IPAddress
-                     // Create port object
+                    // Select IP address to create socket
+                    // If select the specified IP address: IPAddress.Parse(txtServer.Text);  do: string -> IPAddress
+                    IPAddress ip = IPAddress.Any;
+                    // Create port object
                     IPEndPoint ep = new IPEndPoint(ip, Convert.ToInt32(txtPort.Text));
-                    //listener port(bind listening port)
+                    // Listener port(bind listening port)
                     socketWatch.Bind(ep);
-                    // setting up the listening queue
+                    // Setting the maximum number of monitors
                     socketWatch.Listen(10);
-                    ShowMsg("Listening to success!");
+                    ShowMsg("Server starts listening!");
                     // create a new thread to accept connections
                     Thread listen = new Thread(Listen);
                     listen.IsBackground = true;
@@ -62,20 +59,19 @@ namespace socket1
             {
                 ShowMsg("Build connection error!", 1);
             }
-            
-            
         }
 
-        Socket socketSend;
-       /// <summary>
-       /// a socket to responsible for communication
-       /// </summary>
-       /// <param name="o">class Socket</param>
-        void Listen(object o)
+        private Socket socketSend;
+
+        /// <summary>
+        /// a socket to responsible for communication
+        /// </summary>
+        /// <param name="o">class Socket</param>
+        private void Listen(object o)
         {
             Socket socketWatch = o as Socket;
             try
-            { 
+            {
                 while (true)
                 {
                     // Wait for the client to connect and create a socket responsible for communication
@@ -84,6 +80,10 @@ namespace socket1
                     string ip = socketSend.RemoteEndPoint.ToString();
                     dictSocket.Add(ip, socketSend);
                     cbBoxIP.Items.Add(ip);
+                    if(cbBoxIP.Text == "")
+                    {
+                        cbBoxIP.SelectedIndex = cbBoxIP.Items.IndexOf(socketSend.RemoteEndPoint.ToString());
+                    }
                     // Log send
                     ShowMsg(socketSend.RemoteEndPoint.ToString() + ":" + " Connected!");
                     // When client is successfully connected, server should receive the message from the client
@@ -97,14 +97,13 @@ namespace socket1
             {
                 ShowMsg("Connection error! Location: Listen", 1);
             }
-            
         }
 
         /// <summary>
         /// receive the message from the client
         /// </summary>
         /// <param name="obj">Socket Send Object</param>
-        void Receive(object obj)
+        private void Receive(object obj)
         {
             Socket socketSend = obj as Socket;
             try
@@ -118,7 +117,7 @@ namespace socket1
                         ShowMsg(socketSend.RemoteEndPoint.ToString() + ": " + "Close!");
                         dictSocket.Remove(socketSend.RemoteEndPoint.ToString());
                         cbBoxIP.Items.Remove(socketSend.RemoteEndPoint.ToString());
-                        // socketSend.Dispose();
+
                         socketSend.Close();
                         break;
                     }
@@ -129,7 +128,6 @@ namespace socket1
                     }
                     else if (buffer[0] == (byte)msgType.file)
                     {
-
                     }
                     else
                     {
@@ -137,19 +135,35 @@ namespace socket1
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                if(!(e is System.Net.Sockets.SocketException))
+                if (e is System.Net.Sockets.SocketException)
                 {
-                    ShowMsg("Connection error! Location: Receive", 1);
+                    ShowMsg("The remote host closed an existing connection!" + "Host is " + socketSend.RemoteEndPoint, 1);
+                    dictSocket.Remove(socketSend.RemoteEndPoint.ToString());
+                    cbBoxIP.Items.Remove(socketSend.RemoteEndPoint.ToString());
+                    if(cbBoxIP.Text == "")
+                    {
+                        if(dictSocket.Keys != null)
+                        {
+                            foreach(string str in dictSocket.Keys)
+                            {
+                                cbBoxIP.SelectedIndex = cbBoxIP.Items.IndexOf(str);
+                                break;
+                            }
+                        }
+                    }
+                    Thread.CurrentThread.Abort();
                 }
+                //else if()
+                //{
+                //}
                 else
                 {
-                    
+                    ShowMsg("Unknown error! Location: Receive", 1);
+                    Thread.CurrentThread.Abort();
                 }
-                
             }
-            
         }
 
         /// <summary>
@@ -157,21 +171,24 @@ namespace socket1
         /// </summary>
         /// <param name="str">Log message</param>
         /// <param name="level">log level default is INFO, ERROR is 1, MESG is 2</param>
-        void ShowMsg(string str,int level = 0)
+        private void ShowMsg(string str, int level = 0)
         {
             string time = DateTime.Now.ToString().Substring(11);
             string state;
             switch (level)
             {
-                case 0: 
+                case 0:
                     state = "[INFO]";
                     break;
+
                 case 1:
                     state = "[ERROR]";
                     break;
+
                 case 2:
                     state = "[MESG]";
                     break;
+
                 default:
                     state = "[NULL]";
                     break;
@@ -187,12 +204,12 @@ namespace socket1
                 txtPort.Text = "0";
             }
 
-            if(txtPort.Text == "")
+            if (txtPort.Text == "")
             {
                 txtPort.Text = "0";
             }
-            
-            if(Convert.ToInt32(txtPort.Text) < 0 || Convert.ToInt32(txtPort.Text) > 65535)
+
+            if (Convert.ToInt32(txtPort.Text) < 0 || Convert.ToInt32(txtPort.Text) > 65535)
             {
                 MessageBox.Show("Input Error! The value should range from 0 ~ 65535");
                 txtPort.Text = "0";
@@ -211,7 +228,7 @@ namespace socket1
                 string str = txtMsg.Text;
                 byte[] initBuffer = System.Text.Encoding.UTF8.GetBytes(str);
                 byte[] buffer = MessageHeaders(msgType.text, initBuffer);
-                ShowMsg("buffer length is "+buffer.Length);
+                ShowMsg("buffer length is " + buffer.Length);
                 // Get the IP address selected from the comboBox list
                 string ip = cbBoxIP.SelectedItem.ToString();
                 // Send message to the specified IP
@@ -223,7 +240,6 @@ namespace socket1
             {
                 ShowMsg("Message send failure!", 1);
             }
-
         }
 
         /// <summary>
@@ -252,7 +268,7 @@ namespace socket1
         /// <summary>
         /// define the message types
         /// </summary>
-        enum msgType
+        private enum msgType
         {
             text,
             file,
@@ -278,8 +294,8 @@ namespace socket1
 
         private void btnSendFile_Click(object sender, EventArgs e)
         {
-            string  path = txtPath.Text;
-            using(FileStream fsRead = new FileStream(path, FileMode.Open, FileAccess.Read))
+            string path = txtPath.Text;
+            using (FileStream fsRead = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 byte[] initBuffer = new byte[1024 * 1024 * 2];
                 int r = fsRead.Read(initBuffer, 0, initBuffer.Length);

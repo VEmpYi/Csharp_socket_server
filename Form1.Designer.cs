@@ -85,6 +85,7 @@
             // 
             // cbBoxIP
             // 
+            this.cbBoxIP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBoxIP.FormattingEnabled = true;
             this.cbBoxIP.Location = new System.Drawing.Point(457, 15);
             this.cbBoxIP.Name = "cbBoxIP";
