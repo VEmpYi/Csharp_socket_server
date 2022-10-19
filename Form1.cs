@@ -117,7 +117,17 @@ namespace socket1
                         ShowMsg(socketSend.RemoteEndPoint.ToString() + ": " + "Close!");
                         dictSocket.Remove(socketSend.RemoteEndPoint.ToString());
                         cbBoxIP.Items.Remove(socketSend.RemoteEndPoint.ToString());
-
+                        if (cbBoxIP.Text == "")
+                        {
+                            if (dictSocket.Keys != null)
+                            {
+                                foreach (string str in dictSocket.Keys)
+                                {
+                                    cbBoxIP.SelectedIndex = cbBoxIP.Items.IndexOf(str);
+                                    break;
+                                }
+                            }
+                        }
                         socketSend.Close();
                         break;
                     }
