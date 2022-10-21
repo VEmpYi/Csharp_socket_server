@@ -87,7 +87,7 @@
             // 
             this.cbBoxIP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBoxIP.FormattingEnabled = true;
-            this.cbBoxIP.Location = new System.Drawing.Point(457, 15);
+            this.cbBoxIP.Location = new System.Drawing.Point(450, 15);
             this.cbBoxIP.Name = "cbBoxIP";
             this.cbBoxIP.Size = new System.Drawing.Size(121, 23);
             this.cbBoxIP.TabIndex = 4;
