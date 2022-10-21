@@ -288,6 +288,7 @@ namespace socket1
             }
             catch
             {
+                ShowMsg("Content processing failure!", 1);
                 return null;
             }
         }
