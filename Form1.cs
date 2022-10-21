@@ -298,27 +298,41 @@ namespace socket1
             ofd.Title = "Open";
             ofd.Filter = "All files|*.*";
             ofd.ShowDialog();
-
             txtPath.Text = ofd.FileName;
         }
 
         private void btnSendFile_Click(object sender, EventArgs e)
         {
-            string path = txtPath.Text;
-            using (FileStream fsRead = new FileStream(path, FileMode.Open, FileAccess.Read))
+            try
             {
-                byte[] initBuffer = new byte[1024 * 1024 * 2];
-                int r = fsRead.Read(initBuffer, 0, initBuffer.Length);
-                byte[] buffer = MessageHeaders(msgType.file, initBuffer);
-                if (buffer != null)
+                string path = txtPath.Text;
+                using (FileStream fsRead = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
-                    ShowMsg("Preparing to send file!");
+                    byte[] initBuffer = new byte[1024 * 1024 * 2];
+                    int r = fsRead.Read(initBuffer, 0, initBuffer.Length);
+                    byte[] buffer = MessageHeaders(msgType.file, initBuffer);
+                    if (buffer != null)
+                    {
+                        ShowMsg("Preparing to send file!");
+                    }
+                    else
+                    {
+                        ShowMsg("File create failure!", 1);
+                    }
+                    dictSocket[cbBoxIP.SelectedItem.ToString()].Send(buffer, 0, r + 1, SocketFlags.None);
                 }
-                else
+            }
+            catch(Exception ex)
+            {
+                if(ex is System.ArgumentException)
                 {
-                    ShowMsg("File create failure!", 1);
+                    ShowMsg("File path is empty!", 1);
+                    MessageBox.Show("File path is empty!", "Error");
                 }
-                dictSocket[cbBoxIP.SelectedItem.ToString()].Send(buffer, 0, r + 1, SocketFlags.None);
+                if(ex is System.NullReferenceException)
+                {
+                    ShowMsg("No remote client is selected!", 1);
+                }
             }
         }
 
